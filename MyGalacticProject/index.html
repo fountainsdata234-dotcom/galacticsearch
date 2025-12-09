@@ -610,6 +610,68 @@
       document
         .querySelectorAll(".reveal")
         .forEach((el) => observer.observe(el));
+      async function startDownload() {
+            const url = document.getElementById('urlInput').value;
+            const loader = document.getElementById('loader');
+            const resultArea = document.getElementById('result-area');
+            const errorMsg = document.getElementById('error-msg');
+
+            if(!url) return alert("Please enter a URL");
+
+            // Reset UI
+            loader.style.display = 'block';
+            resultArea.style.display = 'none';
+            resultArea.innerHTML = ''; // Clear old results
+            errorMsg.style.display = 'none';
+
+            try {
+                const res = await fetch(`${API_URL}?url=${encodeURIComponent(url)}`);
+                const data = await res.json();
+
+                loader.style.display = 'none';
+
+                if(data.status === 'success') {
+                    resultArea.style.display = 'block';
+                    
+                    // We generate a clean HTML card
+                    // 1. We add 'onerror' to the image so if it breaks, it shows a default Galaxy icon
+                    // 2. We add 'referrerpolicy="no-referrer"' to the link to bypass blocking
+                    resultArea.innerHTML = `
+                        <div class="card">
+                            <h3 style="margin-bottom:10px;">${data.title.substring(0, 50)}...</h3>
+                            
+                            <img 
+                                src="${data.thumbnail}" 
+                                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" 
+                                alt="Video Thumbnail"
+                                style="width:100%; border-radius:10px; margin-bottom:15px;"
+                            >
+                            
+                            <a href="${data.download_url}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               referrerpolicy="no-referrer"
+                               class="dl-btn">
+                               DOWNLOAD VIDEO
+                            </a>
+                            
+                            <p style="font-size:0.8rem; color:#888; margin-top:10px;">
+                                If download doesn't start, click the button to open the video, then tap the 3 dots to save.
+                            </p>
+                        </div>
+                    `;
+                    saveToHistory(data);
+                } else {
+                    throw new Error(data.message || "Failed");
+                }
+
+            } catch (err) {
+                loader.style.display = 'none';
+                errorMsg.innerText = "Transmission Error: " + err.message;
+                errorMsg.style.display = 'block';
+            }
+        }
     </script>
   </body>
 </html>
+
