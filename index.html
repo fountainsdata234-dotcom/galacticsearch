@@ -1,687 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GalacticSearch | Universal Video Downloader</title>
-    <meta
-      name="description"
-      content="Download videos from TikTok, Instagram, YouTube, and more without watermarks."
-    />
-    <meta name="theme-color" content="#000000" />
-    <!-- PWA Manifest Link -->
-    <link rel="manifest" href="manifest.json" />
-    <!-- Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;600&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Icons -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XTRACTION | Universal Media Saver</title>
+    <meta name="theme-color" content="#0a0a12">
+    <!-- Font: Rajdhani for tech look, Orbitron for headers -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-      /* --- 1. GALAXY UNIVERSE CSS --- */
-      :root {
-        --primary: #00f3ff;
-        --secondary: #bc13fe;
-        --bg: #050510;
-        --glass: rgba(255, 255, 255, 0.05);
-      }
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        scroll-behavior: smooth;
-      }
-      body {
-        background-color: #000;
-        color: #fff;
-        font-family: "Exo 2", sans-serif;
-        overflow-x: hidden;
-        min-height: 100vh;
-      }
-
-      /* REPLACE THE OLD .stars and .twinkling CSS WITH THIS */
-
-      .stars {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #000;
-        z-index: -2;
-      }
-
-      /* Creates stars using CSS shadows - lightweight and unbreakable */
-      .stars::after {
-        content: "";
-        position: absolute;
-        top: 2000px;
-        width: 1px;
-        height: 1px;
-        background: transparent;
-        box-shadow: 174px 544px #fff, 1870px 650px #fff, 466px 973px #fff,
-          1195px 95px #fff, 887px 759px #fff, 1528px 456px #fff,
-          1656px 209px #fff, 214px 85px #fff, 942px 796px #fff,
-          1686px 871px #fff, 1205px 617px #fff, 1279px 233px #fff,
-          1618px 290px #fff, 648px 235px #fff, 359px 715px #fff;
-        animation: animStar 50s linear infinite;
-      }
-
-      .twinkling {
-        /* Optional: We can remove the twinkling image overlay to keep it clean */
-        display: none;
-      }
-
-      @keyframes animStar {
-        from {
-          transform: translateY(-2000px);
+        :root {
+            --primary: #00f3ff;   /* Cyan */
+            --accent: #bc13fe;    /* Neon Purple */
+            --bg: #050510;
+            --glass: rgba(20, 20, 35, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
         }
-        to {
-          transform: translateY(-0px);
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
-      }
-      /* --- 2. HEADER & LOGO --- */
-      header {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 100;
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .logo {
-        font-family: "Orbitron", sans-serif;
-        font-size: 1.5rem;
-        font-weight: 900;
-        cursor: pointer;
-        display: flex;
-      }
-      .logo span {
-        display: inline-block;
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-          opacity 0.5s;
-        background: linear-gradient(to right, var(--primary), var(--secondary));
-        -webkit-background-clip: text;
-        color: transparent;
-      }
 
-      /* Hamburger */
-      .hamburger {
-        cursor: pointer;
-        z-index: 102;
-        transition: transform 0.3s;
-      }
-
-      /* --- 3. MENU OVERLAY (BOUNCE EFFECT) --- */
-      #menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(5, 5, 16, 0.98);
-        z-index: 101;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transform: translateY(-120%);
-        transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* The Bounce */
-      }
-      #menu-overlay.active {
-        transform: translateY(0);
-      }
-      .menu-item {
-        font-size: 2rem;
-        font-family: "Orbitron";
-        margin: 20px 0;
-        color: white;
-        text-decoration: none;
-        position: relative;
-        cursor: pointer;
-      }
-      .menu-item:hover {
-        color: var(--primary);
-        text-shadow: 0 0 10px var(--primary);
-      }
-
-      /* --- 4. SECTIONS & LAYOUT --- */
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 120px 20px 50px;
-        min-height: 80vh;
-      }
-      .page-section {
-        display: none;
-        animation: fadeIn 0.5s ease;
-      }
-      .page-section.active {
-        display: block;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
+        /* --- BACKGROUND ANIMATION --- */
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+        .stars::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkle 4s infinite;
+            opacity: 0.5;
         }
-      }
+        @keyframes twinkle { 0% {transform: translateY(0);} 100% {transform: translateY(-100px);} }
 
-      /* Home Hero */
-      .hero {
-        text-align: center;
-        margin-bottom: 50px;
-      }
-      h1 {
-        font-family: "Orbitron";
-        font-size: 3rem;
-        margin-bottom: 20px;
-        background: linear-gradient(to right, #fff, var(--primary));
-        -webkit-background-clip: text;
-        color: transparent;
-      }
-
-      /* Search Bar */
-      .search-box {
-        position: relative;
-        max-width: 600px;
-        margin: 0 auto;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 5px;
-        border-radius: 50px;
-        border: 1px solid var(--secondary);
-        box-shadow: 0 0 20px rgba(188, 19, 254, 0.2);
-        transition: 0.3s;
-      }
-      .search-box:hover {
-        box-shadow: 0 0 40px rgba(188, 19, 254, 0.4);
-      }
-      .search-box input {
-        width: 80%;
-        background: transparent;
-        border: none;
-        color: white;
-        padding: 15px 20px;
-        font-size: 1rem;
-        outline: none;
-        font-family: "Exo 2";
-      }
-      .search-box button {
-        width: 18%;
-        background: var(--secondary);
-        border: none;
-        color: white;
-        padding: 12px;
-        border-radius: 40px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: 0.3s;
-      }
-      .search-box button:hover {
-        background: var(--primary);
-        color: black;
-      }
-
-      /* Results Card */
-      #result-area {
-        display: none;
-        margin-top: 40px;
-      }
-      .card {
-        background: var(--glass);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 20px;
-        border-radius: 15px;
-        max-width: 400px;
-        margin: 0 auto;
-        text-align: center;
-        backdrop-filter: blur(10px);
-      }
-      .card img {
-        width: 100%;
-        border-radius: 10px;
-        margin-bottom: 15px;
-      }
-      .dl-btn {
-        display: block;
-        width: 100%;
-        padding: 15px;
-        margin-top: 10px;
-        background: linear-gradient(45deg, var(--secondary), var(--primary));
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        font-family: "Orbitron";
-        border-radius: 5px;
-      }
-
-      /* History Grid */
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-      }
-
-      /* Contact Form */
-      input.field,
-      textarea.field {
-        width: 100%;
-        background: #111;
-        border: 1px solid #333;
-        color: white;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 5px;
-      }
-
-      /* Footer */
-      footer {
-        text-align: center;
-        padding: 30px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        font-size: 0.9rem;
-        color: #888;
-        margin-top: 50px;
-      }
-
-      /* Loader */
-      .loader {
-        display: none;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid var(--primary);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+        /* --- NAVBAR --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px; position: fixed; width: 100%; z-index: 50;
+            background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
         }
-        100% {
-          transform: rotate(360deg);
+        .logo { 
+            font-family: 'Orbitron'; font-weight: 900; font-size: 1.5rem; letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; color: transparent;
         }
-      }
+        .hamburger { cursor: pointer; color: white; transition: 0.3s; }
+        .hamburger:hover { color: var(--primary); transform: scale(1.1); }
 
-      /* Responsive */
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 2rem;
+        /* --- MENU OVERLAY --- */
+        #menu {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--bg); z-index: 40;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transform: translateY(-100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
-        .menu-item {
-          font-size: 1.5rem;
+        #menu.active { transform: translateY(0); }
+        .nav-link { 
+            font-family: 'Orbitron'; font-size: 2rem; color: #fff; margin: 15px; text-decoration: none; 
+            text-transform: uppercase; position: relative;
         }
-      }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background: var(--primary); transition: width 0.3s;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* --- MAIN CONTENT --- */
+        .container { max-width: 600px; margin: 100px auto 40px; padding: 0 20px; text-align: center; }
+
+        /* CAROUSEL TEXT */
+        .carousel-container { height: 40px; overflow: hidden; margin-bottom: 10px; }
+        .carousel-text {
+            animation: slideUp 6s infinite; font-size: 1rem; color: var(--primary); font-weight: 700; letter-spacing: 1px;
+        }
+        @keyframes slideUp {
+            0%, 20% { transform: translateY(0); }
+            25%, 45% { transform: translateY(-40px); }
+            50%, 70% { transform: translateY(-80px); }
+            75%, 100% { transform: translateY(-120px); }
+        }
+
+        h1 { font-family: 'Orbitron'; font-size: 2.5rem; margin-bottom: 30px; line-height: 1.1; }
+        .gradient-text { background: linear-gradient(90deg, var(--primary), var(--accent)); -webkit-background-clip: text; color: transparent; }
+
+        /* INPUT AREA */
+        .input-group {
+            position: relative; background: var(--glass);
+            border: 1px solid var(--primary); border-radius: 12px;
+            padding: 5px; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            transition: 0.3s; display: flex;
+        }
+        .input-group:focus-within { box-shadow: 0 0 30px rgba(0, 243, 255, 0.5); transform: scale(1.02); }
+        input {
+            width: 100%; background: transparent; border: none; outline: none;
+            padding: 15px; color: white; font-family: 'Rajdhani'; font-size: 1.1rem;
+        }
+        .go-btn {
+            background: var(--primary); color: #000; border: none; font-weight: bold;
+            padding: 0 25px; border-radius: 8px; cursor: pointer; transition: 0.3s;
+        }
+        .go-btn:hover { background: white; }
+
+        /* RESULT CARD */
+        #result-area { display: none; margin-top: 40px; animation: popIn 0.5s ease; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .video-card {
+            background: #13131f; border-radius: 15px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); text-align: left;
+        }
+        .video-thumb-container { position: relative; width: 100%; height: 250px; overflow: hidden; }
+        .video-thumb { width: 100%; height: 100%; object-fit: cover; }
+        .video-info { padding: 20px; }
+        .video-title { font-size: 1.1rem; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .action-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 8px;
+            font-family: 'Orbitron'; font-weight: 700; cursor: pointer; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-download { background: linear-gradient(45deg, var(--accent), var(--primary)); color: white; }
+        .btn-download:active { transform: scale(0.98); }
+
+        /* DOWNLOADS LIST (History) */
+        .download-item {
+            background: rgba(255,255,255,0.05); padding: 15px; margin-bottom: 10px;
+            border-radius: 10px; display: flex; gap: 15px; align-items: center;
+        }
+        .d-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; background: #333; }
+        .d-info { flex: 1; text-align: left; }
+        .d-title { font-size: 0.9rem; margin-bottom: 5px; color: #ccc; }
+        .d-status { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* NOTIFICATION TOAST */
+        #toast {
+            position: fixed; top: -80px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9); border: 1px solid var(--primary);
+            padding: 15px 25px; border-radius: 50px; z-index: 100;
+            display: flex; align-items: center; gap: 15px; width: 90%; max-width: 400px;
+            transition: top 0.5s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        #toast.show { top: 20px; }
+        .toast-text { flex: 1; font-size: 0.9rem; }
+        .toast-btn { 
+            background: var(--primary); color: black; border: none; 
+            padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; 
+        }
+
+        /* UTILS */
+        .hidden { display: none !important; }
+        .loader { 
+            width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.3); 
+            border-top: 3px solid var(--primary); border-radius: 50%; 
+            animation: spin 1s linear infinite; margin: 30px auto; 
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
-  </head>
-  <body>
+</head>
+<body>
+
     <div class="stars"></div>
-    <div class="twinkling"></div>
 
-    <!-- Header -->
-    <header>
-      <div class="logo" id="anim-logo">GalacticSearch</div>
-      <div class="hamburger" onclick="toggleMenu()">
-        <i data-lucide="menu" id="menu-icon" size="32" color="white"></i>
-      </div>
-    </header>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">XTRACTION</div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <i data-lucide="menu" size="30"></i>
+        </div>
+    </nav>
 
-    <!-- Menu Overlay -->
-    <div id="menu-overlay">
-      <a class="menu-item" onclick="nav('home')">HOME / DOWNLOADER</a>
-      <a class="menu-item" onclick="nav('downloads')">MISSION LOG (HISTORY)</a>
-      <a class="menu-item" onclick="nav('about')">ABOUT MISSION</a>
-      <a class="menu-item" onclick="nav('contact')">ESTABLISH COMMS</a>
-      <a class="menu-item" onclick="nav('privacy')">PRIVACY PROTOCOL</a>
+    <!-- FULLSCREEN MENU -->
+    <div id="menu">
+        <a href="#" class="nav-link" onclick="switchPage('home')">Home</a>
+        <a href="#" class="nav-link" onclick="switchPage('downloads')">My Downloads</a>
+        <a href="#" class="nav-link" onclick="switchPage('about')">About</a>
+        <div style="position:absolute; bottom:50px; cursor:pointer;" onclick="toggleMenu()">
+            <i data-lucide="x-circle" size="50" color="white"></i>
+        </div>
     </div>
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <div class="container">
-      <!-- 1. HOME SECTION -->
-      <section id="home" class="page-section active">
-        <div class="hero reveal">
-          <h1>Universal Extraction</h1>
-          <p>TikTok • Instagram • YouTube • Facebook • X • WhatsApp</p>
-        </div>
-
-        <div class="search-box reveal">
-          <input
-            type="text"
-            id="urlInput"
-            placeholder="Paste Galactic URL Here..."
-          />
-          <button onclick="startDownload()">GO</button>
-        </div>
-
-        <div class="loader" id="loader"></div>
-        <p
-          id="error-msg"
-          style="
-            color: red;
-            text-align: center;
-            margin-top: 20px;
-            display: none;
-          "
-        ></p>
-
-        <div id="result-area">
-          <!-- Content injected via JS -->
-        </div>
-      </section>
-
-      <!-- 2. DOWNLOADS HISTORY -->
-      <section id="downloads" class="page-section">
-        <h2 style="font-family: 'Orbitron'; margin-bottom: 20px">
-          Mission Log
-        </h2>
-        <div class="grid" id="history-grid"></div>
-      </section>
-
-      <!-- 3. ABOUT -->
-      <section id="about" class="page-section">
-        <h2 style="font-family: 'Orbitron'">About GalacticSearch</h2>
-        <p style="margin-top: 20px; line-height: 1.6">
-          GalacticSearch is a cutting-edge tool designed by Fountains Data
-          International. We utilize advanced algorithms to extract video data
-          from social media platforms without watermarks.
-        </p>
-      </section>
-
-      <!-- 4. CONTACT -->
-      <section id="contact" class="page-section">
-        <h2 style="font-family: 'Orbitron'">Establish Communications</h2>
-        <form id="contactForm" style="margin-top: 30px; max-width: 500px">
-          <input
-            type="text"
-            id="c-name"
-            class="field"
-            placeholder="Officer Name"
-          />
-          <input
-            type="email"
-            id="c-email"
-            class="field"
-            placeholder="Return Frequency (Email)"
-          />
-          <textarea
-            id="c-msg"
-            class="field"
-            rows="5"
-            placeholder="Message Data..."
-          ></textarea>
-          <button type="button" onclick="sendMessage()" class="dl-btn">
-            TRANSMIT
-          </button>
-        </form>
-        <p id="form-status" style="margin-top: 10px; color: var(--primary)"></p>
-      </section>
-
-      <!-- 5. PRIVACY -->
-      <section id="privacy" class="page-section">
-        <h2>Privacy Protocol</h2>
-        <p style="margin-top: 20px">
-          We do not store your personal data. We only process URLs to extract
-          video links.
-        </p>
-      </section>
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast">
+        <i data-lucide="download-cloud" color="#00f3ff"></i>
+        <div class="toast-text">Downloading...</div>
+        <button class="toast-btn" onclick="switchPage('downloads'); hideToast()">See Details</button>
     </div>
 
-    <footer>
-      <p>Developed by Fountains Data International</p>
-      <p>&copy; 2025 GalacticSearch. All Systems Nominal.</p>
-    </footer>
+    <!-- PAGE 1: HOME -->
+    <div id="p-home" class="container">
+        
+        <div class="carousel-container">
+            <div class="carousel-text">TIKTOK WITHOUT WATERMARK</div>
+            <div class="carousel-text">INSTAGRAM REELS SAVER</div>
+            <div class="carousel-text">YOUTUBE SHORTS HD</div>
+            <div class="carousel-text">TWITTER / X MEDIA</div>
+        </div>
 
-    <!-- LOGIC SCRIPT -->
+        <h1>UNIVERSAL <span class="gradient-text">XTRACTION</span></h1>
+
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="Paste Link Here...">
+            <button class="go-btn" onclick="processLink()">GO</button>
+        </div>
+
+        <div id="loader" class="loader hidden"></div>
+        <p id="error-msg" style="color: #ff4444; margin-top:20px; display:none;"></p>
+
+        <!-- EXTRACTION RESULT -->
+        <div id="result-area"></div>
+
+        <!-- PLATFORMS GRID -->
+        <div style="margin-top:50px; display:grid; grid-template-columns: repeat(4, 1fr); gap:15px; opacity:0.5;">
+            <i data-lucide="instagram"></i>
+            <i data-lucide="youtube"></i>
+            <i data-lucide="facebook"></i>
+            <i data-lucide="twitter"></i>
+        </div>
+    </div>
+
+    <!-- PAGE 2: DOWNLOADS MANAGER -->
+    <div id="p-downloads" class="container hidden">
+        <h1>DOWNLOADS <span class="gradient-text">MANAGER</span></h1>
+        <div id="downloads-list">
+            <!-- Items injected here -->
+        </div>
+        <button onclick="clearHistory()" style="margin-top:20px; background:transparent; border:1px solid #333; color:#666; padding:10px; border-radius:5px;">Clear History</button>
+    </div>
+
+    <!-- PAGE 3: ABOUT -->
+    <div id="p-about" class="container hidden">
+        <h1>ABOUT <span class="gradient-text">XTRACTION</span></h1>
+        <p style="line-height:1.6; color:#ccc;">
+            XTRACTION is an advanced media tool developed by Fountains Data International.
+            We provide high-speed, watermark-free downloads using secure backend technology.
+        </p>
+        <p style="margin-top:20px; font-size:0.8rem; color:#666;">v2.0.0 | System Nominal</p>
+    </div>
+
     <script>
-      // Init Icons
-      lucide.createIcons();
-
-      // --- 1. LOGO ANIMATION ---
-      const logo = document.getElementById("anim-logo");
-      const text = logo.innerText;
-      logo.innerHTML = text
-        .split("")
-        .map((char) => `<span>${char}</span>`)
-        .join("");
-      const chars = logo.querySelectorAll("span");
-
-      function scrambleLogo() {
-        chars.forEach((span, i) => {
-          const x = (Math.random() - 0.5) * 50;
-          const y = (Math.random() - 0.5) * 50;
-          span.style.transform = `translate(${x}px, ${y}px)`;
-          span.style.opacity = 0;
-        });
-        setTimeout(() => {
-          chars.forEach((span, i) => {
-            setTimeout(() => {
-              span.style.transform = `translate(0, 0)`;
-              span.style.opacity = 1;
-            }, i * 50);
-          });
-        }, 500);
-      }
-      setInterval(scrambleLogo, 10000); // Every 10 seconds
-
-      // --- 2. MENU LOGIC ---
-      function toggleMenu() {
-        const overlay = document.getElementById("menu-overlay");
-        const icon = document.getElementById("menu-icon");
-        overlay.classList.toggle("active");
-
-        // Check if active to switch icon
-        if (overlay.classList.contains("active")) {
-          // Transform to X
-          icon.setAttribute("data-lucide", "x");
-        } else {
-          icon.setAttribute("data-lucide", "menu");
-        }
         lucide.createIcons();
-      }
 
-      // --- 3. NAVIGATION ---
-      function nav(id) {
-        document
-          .querySelectorAll(".page-section")
-          .forEach((s) => s.classList.remove("active"));
-        document.getElementById(id).classList.add("active");
-        toggleMenu(); // Close menu
-        if (id === "downloads") loadHistory();
-      }
+        // --- CONFIGURATION ---
+        // REPLACE WITH YOUR VERCEL LINK
+        const API_URL = "https://galactic-backend-silk.vercel.app/api/get-video";
 
-      // --- 4. BACKEND CONNECTION ---
-      // REPLACE THIS URL AFTER DEPLOYING PYTHON BACKEND TO VERCEL
-      const API_URL = "https://galactic-backend-silk.vercel.app/api/get-video";
-      const CONTACT_API = "/api/contact";
-
-      async function startDownload() {
-        const url = document.getElementById("urlInput").value;
-        const loader = document.getElementById("loader");
-        const resultArea = document.getElementById("result-area");
-        const errorMsg = document.getElementById("error-msg");
-
-        if (!url) return alert("Please enter a URL");
-
-        loader.style.display = "block";
-        resultArea.style.display = "none";
-        errorMsg.style.display = "none";
-
-        try {
-          const res = await fetch(`${API_URL}?url=${encodeURIComponent(url)}`);
-          const data = await res.json();
-
-          loader.style.display = "none";
-
-          if (data.status === "success") {
-            resultArea.style.display = "block";
-            resultArea.innerHTML = `
-                        <div class="card">
-                            <h3 style="margin-bottom:10px;">${data.title.substring(
-                              0,
-                              30
-                            )}...</h3>
-                            <img src="${data.thumbnail}" alt="thumb">
-                            <a href="${
-                              data.download_url
-                            }" target="_blank" class="dl-btn" download>DOWNLOAD VIDEO</a>
-                        </div>
-                    `;
-            saveToHistory(data);
-          } else {
-            throw new Error(data.message || "Failed");
-          }
-        } catch (err) {
-          loader.style.display = "none";
-          errorMsg.innerText = "Error: " + err.message;
-          errorMsg.style.display = "block";
+        // --- NAVIGATION ---
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('active');
         }
-      }
 
-      // --- 5. HISTORY LOGIC ---
-      function saveToHistory(data) {
-        const history = JSON.parse(localStorage.getItem("gHistory") || "[]");
-        history.unshift({
-          title: data.title,
-          thumb: data.thumbnail,
-          url: data.download_url,
-          date: new Date().toLocaleDateString(),
-        });
-        localStorage.setItem("gHistory", JSON.stringify(history));
-      }
-
-      function loadHistory() {
-        const history = JSON.parse(localStorage.getItem("gHistory") || "[]");
-        const grid = document.getElementById("history-grid");
-        grid.innerHTML = history
-          .map(
-            (item) => `
-                <div class="card" style="margin:0;">
-                    <img src="${
-                      item.thumb
-                    }" style="height:150px; object-fit:cover;">
-                    <h4>${item.title.substring(0, 20)}...</h4>
-                    <small>${item.date}</small>
-                    <a href="${
-                      item.url
-                    }" class="dl-btn" style="padding:5px; margin-top:10px;">Re-Download</a>
-                </div>
-            `
-          )
-          .join("");
-        if (history.length === 0)
-          grid.innerHTML = "<p>No Mission Records Found.</p>";
-      }
-
-      // --- 6. CONTACT LOGIC ---
-      async function sendMessage() {
-        const name = document.getElementById("c-name").value;
-        const email = document.getElementById("c-email").value;
-        const msg = document.getElementById("c-msg").value;
-        const status = document.getElementById("form-status");
-
-        status.innerText = "Transmitting...";
-
-        try {
-          const res = await fetch(CONTACT_API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, msg }),
-          });
-          if (res.ok) {
-            status.innerText = "Transmission Received by Fountains Data Intl.";
-            document.getElementById("contactForm").reset();
-          } else {
-            status.innerText = "Transmission Failed.";
-          }
-        } catch (e) {
-          status.innerText = "Server Error.";
+        function switchPage(page) {
+            ['home', 'downloads', 'about'].forEach(p => {
+                document.getElementById('p-' + p).classList.add('hidden');
+            });
+            document.getElementById('p-' + page).classList.remove('hidden');
+            document.getElementById('menu').classList.remove('active');
+            
+            if(page === 'downloads') renderDownloads();
         }
-      }
 
-      // --- 7. SCROLL REVEAL ---
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("active");
-        });
-      });
-      document
-        .querySelectorAll(".reveal")
-        .forEach((el) => observer.observe(el));
-
-      async function startDownload() {
+        // --- PROCESS LINK (Step 1) ---
+        async function processLink() {
             const url = document.getElementById('urlInput').value;
-            const loader = document.getElementById('loader');
-            const resultArea = document.getElementById('result-area');
-            const errorMsg = document.getElementById('error-msg');
+            const ui = {
+                loader: document.getElementById('loader'),
+                res: document.getElementById('result-area'),
+                err: document.getElementById('error-msg')
+            };
 
             if(!url) return alert("Please enter a URL");
 
-            // Reset UI
-            loader.style.display = 'block';
-            resultArea.style.display = 'none';
-            resultArea.innerHTML = ''; // Clear old results
-            errorMsg.style.display = 'none';
+            ui.loader.classList.remove('hidden');
+            ui.res.style.display = 'none';
+            ui.err.style.display = 'none';
 
             try {
-                const res = await fetch(`${API_URL}?url=${encodeURIComponent(url)}`);
-                const data = await res.json();
+                const response = await fetch(`${API_URL}?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
 
-                loader.style.display = 'none';
+                ui.loader.classList.add('hidden');
 
                 if(data.status === 'success') {
-                    resultArea.style.display = 'block';
+                    ui.res.style.display = 'block';
                     
-                    // We generate a clean HTML card
-                    // 1. We add 'onerror' to the image so if it breaks, it shows a default Galaxy icon
-                    // 2. We add 'referrerpolicy="no-referrer"' to the link to bypass blocking
-                    resultArea.innerHTML = `
-                        <div class="card">
-                            <h3 style="margin-bottom:10px;">${data.title.substring(0, 50)}...</h3>
-                            
-                            <img 
-                                src="${data.thumbnail}" 
-                                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" 
-                                alt="Video Thumbnail"
-                                style="width:100%; border-radius:10px; margin-bottom:15px;"
-                            >
-                            
-                            <a href="${data.download_url}" 
-                               target="_blank" 
-                               rel="noopener noreferrer" 
-                               referrerpolicy="no-referrer"
-                               class="dl-btn">
-                               DOWNLOAD VIDEO
-                            </a>
-                            
-                            <p style="font-size:0.8rem; color:#888; margin-top:10px;">
-                                If download doesn't start, click the button to open the video, then tap the 3 dots to save.
-                            </p>
+                    // Render Result Card
+                    // Note: We use object-fit cover for professional look
+                    ui.res.innerHTML = `
+                        <div class="video-card">
+                            <div class="video-thumb-container">
+                                <img src="${data.thumbnail}" class="video-thumb" 
+                                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                            </div>
+                            <div class="video-info">
+                                <div class="video-title">${data.title}</div>
+                                <button onclick="startDownload('${data.download_url}', '${data.title.replace(/'/g, "")}', '${data.thumbnail}')" class="action-btn btn-download">
+                                    <i data-lucide="download"></i> DOWNLOAD NOW
+                                </button>
+                            </div>
                         </div>
                     `;
-                    saveToHistory(data);
+                    lucide.createIcons();
                 } else {
-                    throw new Error(data.message || "Failed");
+                    throw new Error(data.message);
                 }
-
-            } catch (err) {
-                loader.style.display = 'none';
-                errorMsg.innerText = "Transmission Error: " + err.message;
-                errorMsg.style.display = 'block';
+            } catch (e) {
+                ui.loader.classList.add('hidden');
+                ui.err.innerText = "Error: " + e.message;
+                ui.err.style.display = 'block';
             }
         }
+
+        // --- DOWNLOAD MANAGER SYSTEM (Step 2) ---
+        
+        // 1. Trigger Download
+        function startDownload(url, title, thumb) {
+            showToast("Downloading... See Details");
+            
+            // Create a unique ID for this download
+            const id = Date.now();
+            
+            // Add to LocalStorage as "In Progress"
+            const item = { id, title, thumb, url, status: 'downloading', date: new Date().toLocaleDateString() };
+            saveItem(item);
+            
+            // Start the Blob Fetch (The "No Redirect" Magic)
+            fetch(url)
+                .then(res => {
+                    if(res.ok) return res.blob();
+                    throw new Error('Network response was not ok.');
+                })
+                .then(blob => {
+                    // Create invisible link to save file
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${title.substring(0, 20)}.mp4`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Update Status to Complete
+                    updateItemStatus(id, 'completed');
+                    showToast("Download Completed!");
+                })
+                .catch(err => {
+                    console.error(err);
+                    updateItemStatus(id, 'failed');
+                    showToast("Download Failed.");
+                });
+        }
+
+        // 2. Storage Logic
+        function getHistory() {
+            return JSON.parse(localStorage.getItem('xtraction_downloads') || '[]');
+        }
+
+        function saveItem(item) {
+            const list = getHistory();
+            list.unshift(item);
+            localStorage.setItem('xtraction_downloads', JSON.stringify(list));
+            renderDownloads(); // If on page
+        }
+
+        function updateItemStatus(id, status) {
+            const list = getHistory();
+            const index = list.findIndex(i => i.id === id);
+            if(index !== -1) {
+                list[index].status = status;
+                localStorage.setItem('xtraction_downloads', JSON.stringify(list));
+                if(!document.getElementById('p-downloads').classList.contains('hidden')) {
+                    renderDownloads();
+                }
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('xtraction_downloads');
+            renderDownloads();
+        }
+
+        // 3. Render the Downloads Page
+        function renderDownloads() {
+            const list = getHistory();
+            const container = document.getElementById('downloads-list');
+            
+            if(list.length === 0) {
+                container.innerHTML = "<p style='color:#666; margin-top:50px;'>No downloads yet.</p>";
+                return;
+            }
+
+            container.innerHTML = list.map(item => `
+                <div class="download-item">
+                    <img src="${item.thumb}" class="d-thumb" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                    <div class="d-info">
+                        <div class="d-title">${item.title.substring(0, 40)}...</div>
+                        <div class="d-status" style="color: ${getStatusColor(item.status)}">
+                            ${item.status === 'downloading' ? '<i data-lucide="loader-2" class="loader-icon"></i> ' : ''}
+                            ${item.status}
+                        </div>
+                    </div>
+                    ${item.status === 'completed' ? 
+                        `<button onclick="window.open('${item.url}')" style="background:var(--primary); border:none; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center;">
+                            <i data-lucide="play" size="14" fill="black"></i>
+                         </button>` 
+                    : ''}
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function getStatusColor(status) {
+            if(status === 'completed') return '#00ff88';
+            if(status === 'failed') return '#ff4444';
+            return '#00f3ff';
+        }
+
+        // --- TOAST NOTIFICATION ---
+        let toastTimeout;
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.querySelector('.toast-text').innerText = msg;
+            t.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(hideToast, 4000);
+        }
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
     </script>
-  </body>
+</body>
 </html>
-
-
